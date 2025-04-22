@@ -1,7 +1,7 @@
 {
 	"name": "ai-react",
 	"version": "0.1.0",
-	"homepage": "https://gamlinskijoleg.github.io/ai-site",
+	"homepage": "https://gamlinskijoleg.github.io/easy-bus",
 	"private": true,
 	"dependencies": {
 		"@testing-library/dom": "^10.4.0",
