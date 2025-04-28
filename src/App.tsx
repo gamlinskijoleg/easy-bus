@@ -96,7 +96,7 @@ const App: React.FC = () => {
 				const result = await Tesseract.recognize(preprocessedCanvas, "eng");
 
 				const digits = result.data.symbols
-					.filter((symbol) => /\d/.test(symbol.text) && symbol.confidence > 95)
+					.filter((symbol) => /\d/.test(symbol.text) && symbol.confidence > 85)
 					.map((symbol) => symbol.text)
 					.join("");
 
