@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, memo } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 
 declare const Tesseract: {
@@ -32,37 +32,11 @@ type TMImageModel = {
 	getTotalClasses: () => number;
 };
 
-const BACKEND_URL = "http://127.0.0.1:8000";
-
-const ImagePreview = memo(({ preview }: { preview: string | null }) => {
-	return preview ? <img id="image" src={preview} alt="Передбачення" /> : null;
-});
-
-const LabelContainer = memo(({ mainLabel, detectedDigits }: { mainLabel: string | null; detectedDigits: string | null }) => {
-	return mainLabel ? (
-		<div id="label-container">
-			<p id="transport-type">{mainLabel}</p>
-			<p id="numbers">Номер: {detectedDigits ?? "нічого не знайдено."}</p>
-		</div>
-	) : null;
-});
-
-const DownloadLink = memo(({ downloadUrl }: { downloadUrl: string | null }) => {
-	return downloadUrl ? (
-		<div id="download-container">
-			<a href={downloadUrl} download="cropped_image.png">
-				Download Cropped Image
-			</a>
-		</div>
-	) : null;
-});
-
 const App: React.FC = () => {
 	const [model, setModel] = useState<TMImageModel | null>(null);
 	const [preview, setPreview] = useState<string | null>(null);
 	const [mainLabel, setMainLabel] = useState<string | null>(null);
 	const [detectedDigits, setDetectedDigits] = useState<string | null>(null);
-	const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
@@ -88,49 +62,22 @@ const App: React.FC = () => {
 		canvas.width = targetWidth;
 		canvas.height = targetHeight;
 
-		ctx.filter = "grayscale(100%) contrast(200%) brightness(115%)";
+		ctx.filter = "grayscale(200%) contrast(200%) brightness(115%)";
 		ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
 
 		return canvas;
 	};
 
-	const predictImage = async (event: any) => {
-		console.log("predictImage function called");
-		event.preventDefault();
+	const predictImage = async () => {
 		setMainLabel("");
 		setDetectedDigits("");
-		setDownloadUrl(null);
 
-		// const fileInput = null
 		const fileInput = fileInputRef.current;
-		if (!fileInput || !model) {
-			console.log("File input or model is missing"); // Debugging log
-			return;
-		}
-
-		if (!fileInput.files?.length) {
-			console.log("shit");
-
-			return;
-		}
+		if (!fileInput || !fileInput.files?.length || !model) return;
 
 		const file = fileInput.files[0];
-		console.log("File selected:", file); // Debugging log
-
-		const formData = new FormData();
-		formData.append("file", file);
-		event.preventDefault(); // Prevent default behavior
-
-		const response = await fetch(`${BACKEND_URL}/process-image/`, {
-			method: "POST",
-			body: formData,
-		});
-
-		// const blob = await response.blob();
-		// const imageUrl = URL.createObjectURL(blob);
-		// setDownloadUrl(imageUrl);
-
 		const reader = new FileReader();
+
 		reader.onload = async () => {
 			const imageSrc = reader.result as string;
 			setPreview(imageSrc);
@@ -157,7 +104,7 @@ const App: React.FC = () => {
 			};
 		};
 
-		// reader.readAsDataURL(file);
+		reader.readAsDataURL(file);
 	};
 
 	return (
@@ -166,18 +113,20 @@ const App: React.FC = () => {
 				Easy <span>Bus</span>
 			</div>
 
-			<div id="image-container">
-				<ImagePreview preview={preview} />
-			</div>
+			<div id="image-container">{preview && <img id="image" src={preview} alt="Передбачення" />}</div>
 
 			<div id="file-input-container">
 				<label htmlFor="file-input">Scan transport!</label>
 				<input id="file-input" type="file" accept="image/*" ref={fileInputRef} onChange={predictImage} />
 			</div>
-
-			<LabelContainer mainLabel={mainLabel} detectedDigits={detectedDigits} />
-
-			<DownloadLink downloadUrl={downloadUrl} />
+			<div id="label-container">
+				{mainLabel && (
+					<>
+						<p id="transport-type">{mainLabel}</p>
+						<p id="numbers">Номер: {detectedDigits ?? "нічого не знайдено."}</p>
+					</>
+				)}
+			</div>
 		</div>
 	);
 };
