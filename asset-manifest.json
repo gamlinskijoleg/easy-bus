@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/easy-bus/static/css/main.f9b62c9f.css",
-    "main.js": "/easy-bus/static/js/main.181fb05c.js",
+    "main.js": "/easy-bus/static/js/main.cd3a2b1d.js",
     "static/js/453.bb8fa7ed.chunk.js": "/easy-bus/static/js/453.bb8fa7ed.chunk.js",
     "index.html": "/easy-bus/index.html",
     "main.f9b62c9f.css.map": "/easy-bus/static/css/main.f9b62c9f.css.map",
-    "main.181fb05c.js.map": "/easy-bus/static/js/main.181fb05c.js.map",
+    "main.cd3a2b1d.js.map": "/easy-bus/static/js/main.cd3a2b1d.js.map",
     "453.bb8fa7ed.chunk.js.map": "/easy-bus/static/js/453.bb8fa7ed.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f9b62c9f.css",
-    "static/js/main.181fb05c.js"
+    "static/js/main.cd3a2b1d.js"
   ]
 }
